@@ -1,19 +1,36 @@
+<script setup>
+import { ref } from 'vue'
+
+const showModal = ref(false)
+const newNote = ref('Please enter your note here...')
+const notes = ref([])
+
+const addNote = () => {
+  let noteObj = {
+    text: newNote.value,
+    date: new Date().toLocaleDateString(),
+    id: Math.floor(Math.random() * 1000000)
+  }
+  notes.value.push(noteObj)
+  newNote.value = ''
+  showModal.value = false
+}
+</script>
+
 <template>
   <main>
-    <!--
-        <div class="overlay">
+    <div v-if="showModal" class="overlay">
       <div class="modal">
-        <textarea name="note" id="note" rows="30" cols="rows"></textarea>
-        <button class="add">Add Note</button>
-        <button class="close">Close</button>
+        <textarea v-model="newNote" name="note" id="note" rows="30" cols="30"></textarea>
+        <button @click="addNote" class="add">Add Note</button>
+        <button @click="showModal = false" class="close">Close</button>
       </div>
     </div>
-    -->
 
     <div class="container">
       <header>
         <h1>Notes</h1>
-        <button>+</button>
+        <button @click="showModal = true">+</button>
       </header>
       <div class="cards-containr">
         <div class="card">
@@ -108,6 +125,8 @@ header button {
   position: relative;
   background-color: white;
   width: 750px;
+  height: 400px;
+  max-height: 80vh;
   padding: 30px;
   border-radius: 30px;
   display: flex;
