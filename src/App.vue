@@ -2,13 +2,26 @@
 import { ref } from 'vue'
 
 const showModal = ref(false)
-const newNote = ref('Please enter your note here...')
+const newNote = ref('')
 const notes = ref([])
+
+function getColor() {
+  return (
+    'hsl(' +
+    360 * Math.random() +
+    ',' +
+    (25 + 70 * Math.random()) +
+    '%,' +
+    (85 + 10 * Math.random()) +
+    '%)'
+  )
+}
 
 const addNote = () => {
   let noteObj = {
     text: newNote.value,
     date: new Date().toLocaleDateString(),
+    color: getColor(),
     id: Math.floor(Math.random() * 1000000)
   }
   notes.value.push(noteObj)
@@ -33,19 +46,16 @@ const addNote = () => {
         <button @click="showModal = true">+</button>
       </header>
       <div class="cards-containr">
-        <div class="card">
+        <div
+          v-for="note in notes"
+          class="card"
+          :style="{ backgroundColor: note.color }"
+          :key="note.id"
+        >
           <p class="main-text">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae earum ex voluptates,
-            delectus velit ducimus!
+            {{ note.text }}
           </p>
-          <p class="date">19/05/24</p>
-        </div>
-        <div class="card">
-          <p class="main-text">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae earum ex voluptates,
-            delectus velit ducimus!
-          </p>
-          <p class="date">19/05/24</p>
+          <p class="date">{{ note.date }}</p>
         </div>
       </div>
     </div>
