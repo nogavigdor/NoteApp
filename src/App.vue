@@ -4,6 +4,7 @@ import { ref } from 'vue'
 const showModal = ref(false)
 const newNote = ref('')
 const notes = ref([])
+const errorMessage = ref('')
 
 function getColor() {
   return (
@@ -18,6 +19,10 @@ function getColor() {
 }
 
 const addNote = () => {
+  if (newNote.value.length < 10) {
+    errorMessage.value = 'Note must be at least 10 characters long'
+    return
+  }
   let noteObj = {
     text: newNote.value,
     date: new Date().toLocaleDateString(),
@@ -34,7 +39,8 @@ const addNote = () => {
   <main>
     <div v-if="showModal" class="overlay">
       <div class="modal">
-        <textarea v-model="newNote" name="note" id="note" rows="30" cols="30"></textarea>
+        <textarea v-model.trim="newNote" name="note" id="note" rows="30" cols="30"></textarea>
+        <p class="error" v-if="errorMessage">{{ errorMessage }}</p>
         <button @click="addNote" class="add">Add Note</button>
         <button @click="showModal = false" class="close">Close</button>
       </div>
@@ -161,5 +167,11 @@ header button {
 
 .modal .close {
   background-color: rgb(174, 15, 15);
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>
